@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem Solver | SPA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root{
+            --text:#0f172a;
+            --muted:#64748b;
+            --primary:#2563eb;
+            --primary-2:#1d4ed8;
+            --cyan:#06b6d4;
+            --shadow:0 24px 60px rgba(15,23,42,.10);
+        }
+
+        *{ box-sizing:border-box; }
+
+        body{
+            margin:0;
+            font-family:Inter,"Segoe UI",Arial,sans-serif;
+            color:var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(37,99,235,.12), transparent 25%),
+                radial-gradient(circle at top right, rgba(14,165,233,.08), transparent 18%),
+                linear-gradient(180deg, #f5f9ff 0%, #eef5ff 60%, #f8fbff 100%);
+            min-height:100vh;
+        }
+
+        .top-nav{
+            position:sticky;
+            top:0;
+            z-index:1000;
+            backdrop-filter:blur(18px);
+            background:rgba(255,255,255,.72);
+            border-bottom:1px solid rgba(219,231,245,.9);
+        }
+
+        .brand{
+            display:flex;
+            align-items:center;
+            gap:14px;
+            font-weight:800;
+            color:#0f172a;
+            text-decoration:none;
+        }
+
+        .brand-icon{
+            width:44px;
+            height:44px;
+            border-radius:14px;
+            display:grid;
+            place-items:center;
+            color:#fff;
+            font-weight:900;
+            background:linear-gradient(135deg, var(--primary), var(--cyan));
+            box-shadow:0 12px 26px rgba(37,99,235,.24);
+        }
+
+        .nav-link-btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            text-decoration:none;
+            font-weight:700;
+            padding:12px 18px;
+            border-radius:16px;
+            color:#334155;
+            background:#fff;
+            border:1px solid #dbe7f5;
+        }
+
+        .nav-link-btn:hover{
+            background:#eff6ff;
+            color:#1d4ed8;
+        }
+
+        .hero{
+            padding:62px 0 42px;
+            background:
+                radial-gradient(circle at 14% 24%, rgba(34,197,94,.16), transparent 16%),
+                radial-gradient(circle at 88% 14%, rgba(59,130,246,.22), transparent 18%),
+                linear-gradient(135deg, rgba(6,18,37,.98), rgba(11,31,61,.95));
+            color:#fff;
+            border-radius:0 0 34px 34px;
+            box-shadow:0 18px 44px rgba(15,23,42,.15);
+        }
+
+        .hero-badge{
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            padding:12px 16px;
+            border-radius:999px;
+            background:rgba(255,255,255,.10);
+            border:1px solid rgba(255,255,255,.14);
+            font-size:13px;
+            font-weight:700;
+            text-transform:uppercase;
+            margin-bottom:18px;
+        }
+
+        .hero h1{
+            font-size:clamp(2rem, 5vw, 4rem);
+            font-weight:900;
+            line-height:1.08;
+            margin-bottom:14px;
+        }
+
+        .hero p{
+            color:rgba(255,255,255,.82);
+            font-size:1.04rem;
+            line-height:1.85;
+            max-width:860px;
+            margin-bottom:0;
+        }
+
+        .page-section{ padding:34px 0 44px; }
+
+        .main-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:24px;
+        }
+
+        .premium-card{
+            background:rgba(255,255,255,.90);
+            border:1px solid rgba(255,255,255,.92);
+            box-shadow:var(--shadow);
+            border-radius:28px;
+            padding:26px;
+            position:relative;
+            overflow:hidden;
+        }
+
+        .premium-card::before{
+            content:"";
+            position:absolute;
+            inset:0 0 auto 0;
+            height:4px;
+            background:linear-gradient(90deg, #2563eb, #06b6d4, #22c55e);
+        }
+
+        .section-tag{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            background:#eaf2ff;
+            color:#1d4ed8;
+            border:1px solid #dbeafe;
+            border-radius:999px;
+            padding:10px 14px;
+            font-size:13px;
+            font-weight:800;
+            text-transform:uppercase;
+            margin-bottom:14px;
+        }
+
+        .card-title{
+            font-size:2rem;
+            font-weight:900;
+            margin-bottom:10px;
+        }
+
+        .card-desc{
+            color:#475569;
+            font-size:1rem;
+            line-height:1.8;
+            margin-bottom:24px;
+        }
+
+        label{
+            display:block;
+            margin-bottom:10px;
+            font-size:.96rem;
+            font-weight:800;
+            color:#0f172a;
+        }
+
+        textarea, input, select{
+            width:100%;
+            padding:14px 16px;
+            border-radius:18px;
+            border:1px solid #dbe7f5;
+            background:linear-gradient(180deg, #ffffff, #f8fbff);
+            font-size:1rem;
+            font-weight:600;
+            color:#0f172a;
+            outline:none;
+            transition:.25s ease;
+            box-shadow:0 8px 18px rgba(15,23,42,.04);
+        }
+
+        textarea:focus, input:focus, select:focus{
+            border-color:#93c5fd;
+            box-shadow:0 0 0 5px rgba(37,99,235,.10);
+        }
+
+        .action-row{
+            display:flex;
+            gap:14px;
+            flex-wrap:wrap;
+            margin-top:24px;
+        }
+
+        .action-btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            min-height:56px;
+            padding:0 22px;
+            border-radius:18px;
+            text-decoration:none;
+            font-weight:800;
+            border:none;
+            cursor:pointer;
+        }
+
+        .action-btn.primary{
+            color:#fff;
+            background:linear-gradient(135deg, #2563eb, #1d4ed8);
+            box-shadow:0 18px 32px rgba(37,99,235,.24);
+        }
+
+        .action-btn.secondary{
+            color:#334155;
+            background:#fff;
+            border:1px solid #dbe7f5;
+        }
+
+        .helper-list{
+            list-style:none;
+            margin:0;
+            padding:0;
+            display:grid;
+            gap:12px;
+        }
+
+        .helper-list li{
+            display:flex;
+            gap:12px;
+            align-items:flex-start;
+            padding:12px 14px;
+            border-radius:16px;
+            background:#f8fbff;
+            border:1px solid #e7eff9;
+            color:#1e293b;
+            line-height:1.65;
+        }
+
+        .mini-dot{
+            width:26px;
+            height:26px;
+            flex-shrink:0;
+            border-radius:10px;
+            display:grid;
+            place-items:center;
+            color:#fff;
+            font-size:.8rem;
+            font-weight:900;
+            background:linear-gradient(135deg, #2563eb, #06b6d4);
+            margin-top:1px;
+        }
+
+        .solution-box{
+            border-radius:22px;
+            background:linear-gradient(180deg, #ffffff, #fbfdff);
+            border:1px solid #e2e8f0;
+            padding:22px;
+            box-shadow:0 12px 24px rgba(15,23,42,.05);
+        }
+
+        .solution-title{
+            font-size:1.15rem;
+            font-weight:900;
+            margin-bottom:14px;
+        }
+
+        .step-list{
+            list-style:none;
+            margin:0;
+            padding:0;
+            display:grid;
+            gap:12px;
+        }
+
+        .step-list li{
+            padding:14px 16px;
+            border-radius:16px;
+            background:#f8fbff;
+            border:1px solid #e7eff9;
+            color:#1e293b;
+            line-height:1.7;
+        }
+
+        .final-answer{
+            margin-top:16px;
+            padding:16px 18px;
+            border-radius:18px;
+            background:linear-gradient(135deg, rgba(37,99,235,.08), rgba(34,197,94,.08));
+            border:1px solid #dbeafe;
+            font-weight:800;
+            color:#0f172a;
+            line-height:1.7;
+        }
+
+        @media (max-width: 991px){
+            .main-grid{ grid-template-columns:1fr; }
+        }
+
+        @media (max-width: 767px){
+            .premium-card{ padding:20px; }
+            .card-title{ font-size:1.65rem; }
+            .action-row{ flex-direction:column; }
+            .action-btn{ width:100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav py-3">
+        <div class="container d-flex justify-content-between align-items-center gap-3 flex-wrap">
+            <a href="{% url 'home' %}" class="brand">
+                <span class="brand-icon">SPA</span>
+                <span>Smart Probability & Statistics Assistant</span>
+            </a>
+            <a href="{% url 'home' %}" class="nav-link-btn">← Back to Home</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">
+                <span>Module 3</span>
+                <span>Problem Solver</span>
+            </div>
+            <h1>Solve probability problems from text</h1>
+            <p>
+                Enter a problem in plain text and the system will try to detect the supported type,
+                extract parameters, and show the steps and final answer.
+            </p>
+        </div>
+    </section>
+
+    <section class="page-section">
+        <div class="container">
+            <div class="main-grid">
+                <div class="premium-card">
+                    <div class="section-tag">Text Input</div>
+                    <h2 class="card-title">Enter your problem</h2>
+                    <p class="card-desc">
+                        Current MVP support is strongest for Bernoulli, Binomial, and Poisson style questions.
+                    </p>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+
+                        <div class="action-row">
+                            <button type="submit" class="action-btn primary">Solve Problem</button>
+                            <a href="{% url 'home' %}" class="action-btn secondary">Go Home</a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="premium-card">
+                    <div class="section-tag">Writing Tips</div>
+                    <h2 class="card-title" style="font-size:1.6rem;">Best input format</h2>
+                    <ul class="helper-list">
+                        <li><span class="mini-dot">1</span><span>Use explicit parameters like <strong>n=10</strong>, <strong>p=0.4</strong>, <strong>k=3</strong>.</span></li>
+                        <li><span class="mini-dot">2</span><span>For Poisson, use <strong>lambda=2.5</strong> or <strong>lam=2.5</strong>.</span></li>
+                        <li><span class="mini-dot">3</span><span>Include the distribution name if possible: Binomial, Bernoulli, or Poisson.</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            {% if solution %}
+                <div class="premium-card mt-4">
+                    <div class="section-tag">Solution Output</div>
+                    <h2 class="card-title" style="font-size:1.8rem;">Detected Type: {{ solution.detected_type }}</h2>
+
+                    <div class="solution-box">
+                        <div class="solution-title">Step-by-step solution</div>
+                        <ul class="step-list">
+                            {% for step in solution.steps %}
+                                <li>{{ step }}</li>
+                            {% endfor %}
+                        </ul>
+
+                        <div class="final-answer">
+                            Final Answer: {{ solution.final_answer }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+</body>
+</html>

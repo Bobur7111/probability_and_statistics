@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPA Analysis Result</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root{
+            --bg-1:#07111f;
+            --bg-2:#0d1b2a;
+            --bg-3:#132238;
+            --card:#ffffff;
+            --text:#0f172a;
+            --muted:#64748b;
+            --line:#e2e8f0;
+            --primary:#2563eb;
+            --primary-2:#1d4ed8;
+            --success:#16a34a;
+            --warning:#f59e0b;
+            --danger:#dc2626;
+            --shadow:0 20px 60px rgba(2, 8, 23, 0.12);
+            --radius:24px;
+        }
+
+        *{
+            box-sizing:border-box;
+        }
+
+        body{
+            margin:0;
+            font-family:Inter, "Segoe UI", Arial, sans-serif;
+            color:var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(37,99,235,.18), transparent 32%),
+                radial-gradient(circle at top right, rgba(14,165,233,.12), transparent 24%),
+                linear-gradient(135deg, #eef4ff 0%, #f8fbff 45%, #eef7f3 100%);
+            min-height:100vh;
+        }
+
+        .hero-shell{
+            background:
+                linear-gradient(135deg, rgba(7,17,31,.95), rgba(20,38,66,.92)),
+                linear-gradient(135deg, #0f172a, #1e293b);
+            color:#fff;
+            border-radius:0 0 36px 36px;
+            padding:42px 0 34px;
+            box-shadow:0 12px 40px rgba(15,23,42,.18);
+            margin-bottom:32px;
+            position:relative;
+            overflow:hidden;
+        }
+
+        .hero-shell::before,
+        .hero-shell::after{
+            content:"";
+            position:absolute;
+            border-radius:50%;
+            filter:blur(8px);
+            opacity:.22;
+        }
+
+        .hero-shell::before{
+            width:260px;
+            height:260px;
+            background:#3b82f6;
+            top:-90px;
+            right:-70px;
+        }
+
+        .hero-shell::after{
+            width:180px;
+            height:180px;
+            background:#22c55e;
+            bottom:-70px;
+            left:-40px;
+        }
+
+        .hero-badge{
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            padding:10px 16px;
+            border:1px solid rgba(255,255,255,.16);
+            background:rgba(255,255,255,.08);
+            backdrop-filter:blur(10px);
+            border-radius:999px;
+            font-size:13px;
+            letter-spacing:.4px;
+            text-transform:uppercase;
+            margin-bottom:18px;
+        }
+
+        .hero-title{
+            font-size:clamp(2rem, 5vw, 3.4rem);
+            font-weight:800;
+            line-height:1.08;
+            margin:0 0 12px;
+        }
+
+        .hero-subtitle{
+            margin:0;
+            color:rgba(255,255,255,.82);
+            max-width:760px;
+            font-size:1.04rem;
+            line-height:1.75;
+        }
+
+        .dashboard-grid{
+            display:grid;
+            grid-template-columns:repeat(12, 1fr);
+            gap:22px;
+            margin-bottom:24px;
+        }
+
+        .dashboard-card{
+            grid-column:span 12;
+            background:rgba(255,255,255,.88);
+            backdrop-filter:blur(10px);
+            border:1px solid rgba(255,255,255,.75);
+            border-radius:var(--radius);
+            box-shadow:var(--shadow);
+            padding:24px;
+            position:relative;
+            overflow:hidden;
+        }
+
+        .dashboard-card::before{
+            content:"";
+            position:absolute;
+            inset:0 0 auto 0;
+            height:4px;
+            background:linear-gradient(90deg, var(--primary), #38bdf8, #22c55e);
+        }
+
+        .stat-grid{
+            display:grid;
+            grid-template-columns:repeat(4, 1fr);
+            gap:18px;
+        }
+
+        .stat-card{
+            background:linear-gradient(180deg, #ffffff, #f8fbff);
+            border:1px solid #e5edf8;
+            border-radius:22px;
+            padding:22px 18px;
+            box-shadow:0 8px 24px rgba(15,23,42,.06);
+            position:relative;
+        }
+
+        .stat-label{
+            color:var(--muted);
+            font-size:.92rem;
+            margin-bottom:10px;
+            font-weight:600;
+        }
+
+        .stat-value{
+            font-size:2rem;
+            font-weight:800;
+            line-height:1;
+            margin-bottom:8px;
+            color:#0b1730;
+        }
+
+        .stat-note{
+            font-size:.9rem;
+            color:#475569;
+            line-height:1.5;
+        }
+
+        .section-title{
+            font-size:1.45rem;
+            font-weight:800;
+            margin:0 0 16px;
+            color:#0f172a;
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+
+        .section-subtitle{
+            color:#475569;
+            font-size:.97rem;
+            line-height:1.7;
+            margin-bottom:18px;
+        }
+
+        .mini-badge{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-width:36px;
+            height:36px;
+            border-radius:12px;
+            background:linear-gradient(135deg, #dbeafe, #eff6ff);
+            color:#1d4ed8;
+            font-weight:800;
+            font-size:.94rem;
+        }
+
+        .info-pills{
+            display:flex;
+            flex-wrap:wrap;
+            gap:12px;
+        }
+
+        .info-pill{
+            display:flex;
+            flex-direction:column;
+            gap:6px;
+            padding:14px 16px;
+            border-radius:18px;
+            background:#f8fbff;
+            border:1px solid #e2e8f0;
+            min-width:200px;
+        }
+
+        .info-pill span:first-child{
+            color:#64748b;
+            font-size:.82rem;
+            text-transform:uppercase;
+            letter-spacing:.4px;
+            font-weight:700;
+        }
+
+        .info-pill span:last-child{
+            color:#0f172a;
+            font-size:1rem;
+            font-weight:700;
+        }
+
+        .summary-box{
+            background:
+                linear-gradient(135deg, rgba(37,99,235,.08), rgba(34,197,94,.08)),
+                #ffffff;
+            border:1px solid #dbeafe;
+            border-radius:22px;
+            padding:22px;
+        }
+
+        .summary-text{
+            font-size:1.04rem;
+            line-height:1.9;
+            color:#1e293b;
+            margin:0;
+        }
+
+        .insight-grid{
+            display:grid;
+            grid-template-columns:repeat(2, 1fr);
+            gap:16px;
+            margin-top:18px;
+        }
+
+        .insight-box{
+            border-radius:20px;
+            border:1px solid #e5edf8;
+            background:linear-gradient(180deg, #ffffff, #f8fbff);
+            padding:18px;
+        }
+
+        .insight-title{
+            font-size:.86rem;
+            color:#64748b;
+            margin-bottom:8px;
+            font-weight:700;
+            text-transform:uppercase;
+            letter-spacing:.4px;
+        }
+
+        .insight-value{
+            font-size:1.2rem;
+            font-weight:800;
+            color:#0f172a;
+            line-height:1.5;
+        }
+
+        .table-shell{
+            overflow:auto;
+            border:1px solid #e2e8f0;
+            border-radius:20px;
+            background:#fff;
+        }
+
+        .custom-table{
+            margin:0;
+            min-width:720px;
+        }
+
+        .custom-table thead th{
+            background:linear-gradient(180deg, #eff6ff, #f8fbff);
+            color:#0f172a;
+            font-weight:800;
+            border-bottom:1px solid #dbeafe !important;
+            padding:16px 14px !important;
+            text-align:center;
+        }
+
+        .custom-table tbody th,
+        .custom-table tbody td{
+            padding:14px !important;
+            text-align:center;
+            vertical-align:middle;
+            border-color:#edf2f7 !important;
+        }
+
+        .custom-table tbody tr:nth-child(even){
+            background:#fcfdff;
+        }
+
+        .chart-grid{
+            display:grid;
+            grid-template-columns:repeat(2, 1fr);
+            gap:18px;
+        }
+
+        .chart-box{
+            background:#fff;
+            border:1px solid #e2e8f0;
+            border-radius:22px;
+            padding:16px;
+            box-shadow:0 8px 24px rgba(15,23,42,.05);
+        }
+
+        .chart-title{
+            font-size:1rem;
+            font-weight:800;
+            margin-bottom:12px;
+            color:#0f172a;
+        }
+
+        .chart-box img{
+            width:100%;
+            height:auto;
+            display:block;
+            border-radius:16px;
+            border:1px solid #eef2f7;
+            background:#fff;
+        }
+
+        .stats-grid{
+            display:grid;
+            grid-template-columns:repeat(4, 1fr);
+            gap:16px;
+        }
+
+        .metric-card{
+            background:linear-gradient(180deg, #ffffff, #f8fbff);
+            border:1px solid #e2e8f0;
+            border-radius:20px;
+            padding:18px;
+        }
+
+        .metric-name{
+            font-size:.88rem;
+            color:#64748b;
+            font-weight:700;
+            margin-bottom:10px;
+        }
+
+        .metric-number{
+            font-size:1.55rem;
+            font-weight:800;
+            color:#0f172a;
+            line-height:1.1;
+        }
+
+        .distribution-grid{
+            display:grid;
+            grid-template-columns:repeat(2, 1fr);
+            gap:18px;
+        }
+
+        .distribution-card{
+            border:1px solid #e2e8f0;
+            border-radius:22px;
+            background:linear-gradient(180deg, #ffffff, #fbfdff);
+            padding:20px;
+        }
+
+        .distribution-title{
+            font-size:1.05rem;
+            font-weight:800;
+            color:#0f172a;
+            margin-bottom:14px;
+        }
+
+        .distribution-list{
+            list-style:none;
+            padding:0;
+            margin:0;
+        }
+
+        .distribution-list li{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:12px 0;
+            border-bottom:1px dashed #e2e8f0;
+            gap:18px;
+        }
+
+        .distribution-list li:last-child{
+            border-bottom:none;
+        }
+
+        .distribution-label{
+            font-weight:700;
+            color:#334155;
+        }
+
+        .distribution-value{
+            font-weight:800;
+            color:#0f172a;
+            background:#eff6ff;
+            border:1px solid #dbeafe;
+            padding:6px 10px;
+            border-radius:12px;
+            min-width:90px;
+            text-align:center;
+        }
+
+        .footer-bar{
+            margin:32px 0 40px;
+            text-align:center;
+            color:#64748b;
+            font-size:.95rem;
+        }
+
+        .error-box{
+            background:#fff1f2;
+            border:1px solid #fecdd3;
+            color:#9f1239;
+            border-radius:20px;
+            padding:18px 20px;
+            box-shadow:var(--shadow);
+        }
+
+        .back-link{
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            text-decoration:none;
+            color:#fff;
+            background:rgba(255,255,255,.1);
+            border:1px solid rgba(255,255,255,.16);
+            padding:12px 16px;
+            border-radius:16px;
+            font-weight:700;
+            transition:.25s ease;
+        }
+
+        .back-link:hover{
+            transform:translateY(-2px);
+            background:rgba(255,255,255,.16);
+            color:#fff;
+        }
+
+        @media (max-width: 1199px){
+            .stat-grid,
+            .stats-grid{
+                grid-template-columns:repeat(2, 1fr);
+            }
+
+            .chart-grid,
+            .distribution-grid,
+            .insight-grid{
+                grid-template-columns:1fr;
+            }
+        }
+
+        @media (max-width: 767px){
+            .dashboard-card{
+                padding:18px;
+                border-radius:20px;
+            }
+
+            .stat-grid,
+            .stats-grid{
+                grid-template-columns:1fr;
+            }
+
+            .hero-shell{
+                border-radius:0 0 26px 26px;
+                padding:34px 0 28px;
+            }
+
+            .hero-title{
+                font-size:2rem;
+            }
+
+            .info-pill{
+                min-width:100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero-shell">
+        <div class="container">
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start gap-4">
+                <div>
+                    <div class="hero-badge">
+                        <span>SPA MVP</span>
+                        <span>Call Log Statistical Analyzer</span>
+                    </div>
+                    <h1 class="hero-title">Analysis Result Dashboard</h1>
+                    <p class="hero-subtitle">
+                        Joint frequency distribution, probability distribution, core statistical indicators,
+                        and visual insights for your selected call log dataset.
+                    </p>
+                </div>
+                <div class="pt-2">
+                    <a href="/upload/" class="back-link">← Upload another file</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+
+        {% if error %}
+            <div class="error-box mb-4">
+                <strong>Error:</strong> {{ error }}
+            </div>
+        {% else %}
+
+        <section class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="section-title">
+                    <span class="mini-badge">01</span>
+                    <span>Overview</span>
+                </div>
+                <div class="section-subtitle">
+                    This section shows the selected analytical columns and the key summary of the processed dataset.
+                </div>
+
+                <div class="info-pills mb-4">
+                    <div class="info-pill">
+                        <span>Time Column</span>
+                        <span>{{ time_col }}</span>
+                    </div>
+                    <div class="info-pill">
+                        <span>Duration Column</span>
+                        <span>{{ duration_col }}</span>
+                    </div>
+                    <div class="info-pill">
+                        <span>Peak Time Interval</span>
+                        <span>{{ peak_time_interval }}</span>
+                    </div>
+                    <div class="info-pill">
+                        <span>Peak Duration Category</span>
+                        <span>{{ peak_duration_interval }}</span>
+                    </div>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Joint Records</div>
+                        <div class="stat-value">{{ total_records }}</div>
+                        <div class="stat-note">Valid records used in the final joint frequency table.</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Valid Processed Rows</div>
+                        <div class="stat-value">{{ valid_records }}</div>
+                        <div class="stat-note">Rows retained after cleaning time and duration values.</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Relationship Direction</div>
+                        <div class="stat-value">{{ direction }}</div>
+                        <div class="stat-note">Direction of association between time interval and duration group.</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Relationship Strength</div>
+                        <div class="stat-value">{{ strength }}</div>
+                        <div class="stat-note">Strength based on the absolute value of the correlation coefficient.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="section-title">
+                    <span class="mini-badge">02</span>
+                    <span>Automatic Conclusion</span>
+                </div>
+                <div class="summary-box">
+                    <p class="summary-text">{{ summary_text }}</p>
+                </div>
+
+                <div class="insight-grid">
+                    <div class="insight-box">
+                        <div class="insight-title">Dominant Time Segment</div>
+                        <div class="insight-value">{{ peak_time_interval }}</div>
+                    </div>
+                    <div class="insight-box">
+                        <div class="insight-title">Dominant Duration Segment</div>
+                        <div class="insight-value">{{ peak_duration_interval }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="section-title">
+                    <span class="mini-badge">03</span>
+                    <span>Joint Frequency Distribution</span>
+                </div>
+                <div class="section-subtitle">
+                    The table below shows the joint frequency table <strong>n<sub>ij</sub></strong> built from time intervals and duration categories.
+                </div>
+                <div class="table-shell">
+                    {{ table|safe }}
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="section-title">
+                    <span class="mini-badge">04</span>
+                    <span>Joint Probability Distribution</span>
+                </div>
+                <div class="section-subtitle">
+                    This table shows the probability distribution <strong>p<sub>ij</sub></strong> obtained by dividing each cell by the total number of valid records.
+                </div>
+                <div class="table-shell">
+                    {{ prob_table|safe }}
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="section-title">
+                    <span class="mini-badge">05</span>
+                    <span>Marginal Distributions</span>
+                </div>
+                <div class="section-subtitle">
+                    Marginal distributions are derived from the joint probability table by summing probabilities over rows and columns.
+                </div>
+
+                <div class="distribution-grid">
+                    <div class="distribution-card">
+                        <div class="distribution-title">P(X) — Time Interval Marginal Distribution</div>
+                        <ul class="distribution-list">
+                            {% for item in px_items %}
+                                <li>
+                                    <span class="distribution-label">{{ item.label }}</span>
+                                    <span class="distribution-value">{{ item.value }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="distribution-card">
+                        <div class="distribution-title">P(Y) — Duration Category Marginal Distribution</div>
+                        <ul class="distribution-list">
+                            {% for item in py_items %}
+                                <li>
+                                    <span class="distribution-label">{{ item.label }}</span>
+                                    <span class="distribution-value">{{ item.value }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="section-title">
+                    <span class="mini-badge">06</span>
+                    <span>Statistical Indicators</span>
+                </div>
+                <div class="section-subtitle">
+                    The metrics below summarize expectation, variance, standard deviation, covariance, and correlation of the coded random variables.
+                </div>
+
+                <div class="stats-grid">
+                    <div class="metric-card">
+                        <div class="metric-name">M[X]</div>
+                        <div class="metric-number">{{ EX }}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-name">M[Y]</div>
+                        <div class="metric-number">{{ EY }}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-name">D[X]</div>
+                        <div class="metric-number">{{ DX }}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-name">D[Y]</div>
+                        <div class="metric-number">{{ DY }}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-name">σ(X)</div>
+                        <div class="metric-number">{{ sigma_x }}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-name">σ(Y)</div>
+                        <div class="metric-number">{{ sigma_y }}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-name">Cov(X,Y)</div>
+                        <div class="metric-number">{{ cov }}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-name">r(X,Y)</div>
+                        <div class="metric-number">{{ corr }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="section-title">
+                    <span class="mini-badge">07</span>
+                    <span>Visual Analytics</span>
+                </div>
+                <div class="section-subtitle">
+                    The first chart displays stacked call distribution by interval. The second chart highlights cell intensity in the joint table.
+                </div>
+
+                <div class="chart-grid">
+                    <div class="chart-box">
+                        <div class="chart-title">Stacked Distribution Chart</div>
+                        <img src="{{ chart_url }}" alt="Stacked Chart">
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-title">Heatmap</div>
+                        <img src="{{ heatmap_url }}" alt="Heatmap">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="footer-bar">
+            Smart Probability & Statistics Assistant — MVP Result Dashboard
+        </div>
+
+        {% endif %}
+    </main>
+
+</body>
+</html>

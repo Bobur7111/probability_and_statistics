@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Column Mapping | SPA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root{
+            --bg-dark:#061225;
+            --bg-dark-2:#0b1f3d;
+            --bg-soft:#eef5ff;
+            --card:#ffffff;
+            --text:#0f172a;
+            --muted:#64748b;
+            --line:#dbe7f5;
+            --primary:#2563eb;
+            --primary-2:#1d4ed8;
+            --success:#16a34a;
+            --cyan:#06b6d4;
+            --shadow:0 24px 60px rgba(15, 23, 42, 0.10);
+            --radius-xl:28px;
+            --radius-lg:22px;
+            --radius-md:18px;
+        }
+
+        *{
+            box-sizing:border-box;
+        }
+
+        body{
+            margin:0;
+            font-family:Inter, "Segoe UI", Arial, sans-serif;
+            color:var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(37,99,235,.12), transparent 25%),
+                radial-gradient(circle at top right, rgba(14,165,233,.08), transparent 18%),
+                linear-gradient(180deg, #f5f9ff 0%, #eef5ff 60%, #f8fbff 100%);
+            min-height:100vh;
+            overflow-x:hidden;
+        }
+
+        .top-nav{
+            position:sticky;
+            top:0;
+            z-index:1000;
+            backdrop-filter:blur(18px);
+            background:rgba(255,255,255,.72);
+            border-bottom:1px solid rgba(219,231,245,.9);
+        }
+
+        .brand{
+            display:flex;
+            align-items:center;
+            gap:14px;
+            font-weight:800;
+            color:#0f172a;
+            text-decoration:none;
+            letter-spacing:.2px;
+        }
+
+        .brand-icon{
+            width:44px;
+            height:44px;
+            border-radius:14px;
+            display:grid;
+            place-items:center;
+            color:#fff;
+            font-weight:900;
+            background:linear-gradient(135deg, var(--primary), var(--cyan));
+            box-shadow:0 12px 26px rgba(37,99,235,.24);
+            font-size:1rem;
+        }
+
+        .nav-actions{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            flex-wrap:wrap;
+        }
+
+        .nav-link-btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            text-decoration:none;
+            font-weight:700;
+            padding:12px 18px;
+            border-radius:16px;
+            transition:.25s ease;
+        }
+
+        .nav-link-btn.soft{
+            color:#334155;
+            background:#ffffff;
+            border:1px solid #dbe7f5;
+        }
+
+        .nav-link-btn.soft:hover{
+            background:#eff6ff;
+            color:#1d4ed8;
+        }
+
+        .nav-link-btn.primary{
+            color:#fff;
+            background:linear-gradient(135deg, var(--primary), var(--primary-2));
+            box-shadow:0 16px 30px rgba(37,99,235,.22);
+        }
+
+        .nav-link-btn.primary:hover{
+            transform:translateY(-2px);
+            color:#fff;
+        }
+
+        .hero{
+            position:relative;
+            overflow:hidden;
+            padding:62px 0 42px;
+            background:
+                radial-gradient(circle at 14% 24%, rgba(34,197,94,.16), transparent 16%),
+                radial-gradient(circle at 88% 14%, rgba(59,130,246,.22), transparent 18%),
+                linear-gradient(135deg, rgba(6,18,37,.98), rgba(11,31,61,.95));
+            color:#fff;
+            border-radius:0 0 34px 34px;
+            box-shadow:0 18px 44px rgba(15,23,42,.15);
+        }
+
+        .hero::before{
+            content:"";
+            position:absolute;
+            width:320px;
+            height:320px;
+            right:-80px;
+            top:-40px;
+            border-radius:50%;
+            background:radial-gradient(circle, rgba(59,130,246,.35), rgba(59,130,246,0));
+            filter:blur(8px);
+        }
+
+        .hero::after{
+            content:"";
+            position:absolute;
+            width:220px;
+            height:220px;
+            left:-50px;
+            bottom:-70px;
+            border-radius:50%;
+            background:radial-gradient(circle, rgba(34,197,94,.28), rgba(34,197,94,0));
+        }
+
+        .hero-badge{
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            padding:12px 16px;
+            border-radius:999px;
+            background:rgba(255,255,255,.10);
+            border:1px solid rgba(255,255,255,.14);
+            font-size:13px;
+            font-weight:700;
+            letter-spacing:.45px;
+            text-transform:uppercase;
+            margin-bottom:18px;
+        }
+
+        .hero h1{
+            font-size:clamp(2rem, 5vw, 4rem);
+            font-weight:900;
+            line-height:1.08;
+            margin-bottom:14px;
+            letter-spacing:-1.2px;
+        }
+
+        .hero p{
+            color:rgba(255,255,255,.82);
+            font-size:1.04rem;
+            line-height:1.85;
+            max-width:860px;
+            margin-bottom:0;
+        }
+
+        .page-section{
+            padding:34px 0 44px;
+        }
+
+        .mapping-grid{
+            display:grid;
+            grid-template-columns:1.05fr .95fr;
+            gap:24px;
+            align-items:start;
+        }
+
+        .premium-card{
+            background:rgba(255,255,255,.88);
+            border:1px solid rgba(255,255,255,.92);
+            backdrop-filter:blur(12px);
+            box-shadow:var(--shadow);
+            border-radius:var(--radius-xl);
+            padding:26px;
+            position:relative;
+            overflow:hidden;
+        }
+
+        .premium-card::before{
+            content:"";
+            position:absolute;
+            inset:0 0 auto 0;
+            height:4px;
+            background:linear-gradient(90deg, #2563eb, #06b6d4, #22c55e);
+        }
+
+        .section-tag{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            background:#eaf2ff;
+            color:#1d4ed8;
+            border:1px solid #dbeafe;
+            border-radius:999px;
+            padding:10px 14px;
+            font-size:13px;
+            font-weight:800;
+            text-transform:uppercase;
+            letter-spacing:.45px;
+            margin-bottom:14px;
+        }
+
+        .card-title{
+            font-size:2rem;
+            font-weight:900;
+            margin-bottom:10px;
+            color:#0f172a;
+            letter-spacing:-.6px;
+        }
+
+        .card-desc{
+            color:#475569;
+            font-size:1rem;
+            line-height:1.8;
+            margin-bottom:24px;
+        }
+
+        .field-block{
+            margin-bottom:18px;
+        }
+
+        .field-label{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            font-size:.98rem;
+            font-weight:800;
+            color:#0f172a;
+            margin-bottom:10px;
+        }
+
+        .field-label-badge{
+            width:32px;
+            height:32px;
+            border-radius:12px;
+            display:grid;
+            place-items:center;
+            color:#fff;
+            font-size:.85rem;
+            font-weight:900;
+            background:linear-gradient(135deg, #2563eb, #06b6d4);
+            box-shadow:0 10px 18px rgba(37,99,235,.18);
+        }
+
+        .premium-select{
+            width:100%;
+            min-height:58px;
+            padding:0 16px;
+            border-radius:18px;
+            border:1px solid #dbe7f5;
+            background:linear-gradient(180deg, #ffffff, #f8fbff);
+            font-size:1rem;
+            font-weight:600;
+            color:#0f172a;
+            outline:none;
+            transition:.25s ease;
+            box-shadow:0 8px 18px rgba(15,23,42,.04);
+        }
+
+        .premium-select:focus{
+            border-color:#93c5fd;
+            box-shadow:0 0 0 5px rgba(37,99,235,.10);
+        }
+
+        .helper-text{
+            margin-top:10px;
+            color:#64748b;
+            line-height:1.65;
+            font-size:.92rem;
+        }
+
+        .action-row{
+            display:flex;
+            gap:14px;
+            flex-wrap:wrap;
+            margin-top:24px;
+        }
+
+        .action-btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            min-height:56px;
+            padding:0 22px;
+            border-radius:18px;
+            text-decoration:none;
+            font-weight:800;
+            border:none;
+            transition:.25s ease;
+            cursor:pointer;
+        }
+
+        .action-btn.primary{
+            color:#fff;
+            background:linear-gradient(135deg, #16a34a, #22c55e);
+            box-shadow:0 18px 32px rgba(34,197,94,.24);
+        }
+
+        .action-btn.primary:hover{
+            transform:translateY(-2px);
+        }
+
+        .action-btn.secondary{
+            color:#334155;
+            background:#ffffff;
+            border:1px solid #dbe7f5;
+        }
+
+        .action-btn.secondary:hover{
+            background:#eff6ff;
+            color:#1d4ed8;
+        }
+
+        .info-grid{
+            display:grid;
+            gap:16px;
+        }
+
+        .info-box{
+            border-radius:22px;
+            background:linear-gradient(180deg, #ffffff, #fbfdff);
+            border:1px solid #e2e8f0;
+            padding:20px;
+            box-shadow:0 12px 24px rgba(15,23,42,.05);
+        }
+
+        .info-box h3{
+            margin:0 0 10px;
+            font-size:1.08rem;
+            font-weight:900;
+            color:#0f172a;
+        }
+
+        .info-box p{
+            margin:0;
+            color:#475569;
+            line-height:1.75;
+        }
+
+        .mini-list{
+            list-style:none;
+            margin:0;
+            padding:0;
+            display:grid;
+            gap:12px;
+        }
+
+        .mini-list li{
+            display:flex;
+            gap:12px;
+            align-items:flex-start;
+            padding:12px 14px;
+            border-radius:16px;
+            background:#f8fbff;
+            border:1px solid #e7eff9;
+            color:#1e293b;
+            line-height:1.65;
+        }
+
+        .mini-dot{
+            width:26px;
+            height:26px;
+            flex-shrink:0;
+            border-radius:10px;
+            display:grid;
+            place-items:center;
+            color:#fff;
+            font-size:.8rem;
+            font-weight:900;
+            background:linear-gradient(135deg, #2563eb, #06b6d4);
+            margin-top:1px;
+        }
+
+        .formula-panel{
+            background:
+                radial-gradient(circle at top right, rgba(59,130,246,.08), transparent 24%),
+                linear-gradient(180deg, #ffffff, #fbfdff);
+            border:1px solid #e2e8f0;
+            border-radius:24px;
+            padding:20px;
+        }
+
+        .formula-panel h4{
+            margin:0 0 12px;
+            font-size:1.05rem;
+            font-weight:900;
+        }
+
+        .formula-box{
+            border-radius:18px;
+            background:#0f172a;
+            color:#f8fafc;
+            padding:16px 18px;
+            font-size:1rem;
+            line-height:1.8;
+            overflow:auto;
+            font-weight:700;
+            margin-bottom:12px;
+        }
+
+        .formula-note{
+            color:#475569;
+            line-height:1.75;
+            margin:0;
+        }
+
+        .tip-banner{
+            margin-top:20px;
+            border-radius:22px;
+            background:linear-gradient(135deg, rgba(37,99,235,.08), rgba(34,197,94,.08));
+            border:1px solid #dbeafe;
+            padding:18px 20px;
+        }
+
+        .tip-banner h4{
+            margin:0 0 8px;
+            font-size:1rem;
+            font-weight:900;
+            color:#0f172a;
+        }
+
+        .tip-banner p{
+            margin:0;
+            color:#334155;
+            line-height:1.75;
+        }
+
+        .footer-note{
+            margin-top:26px;
+            text-align:center;
+            color:#64748b;
+            font-size:.94rem;
+        }
+
+        @media (max-width: 1199px){
+            .mapping-grid{
+                grid-template-columns:1fr;
+            }
+        }
+
+        @media (max-width: 767px){
+            .hero{
+                padding:48px 0 38px;
+                border-radius:0 0 26px 26px;
+            }
+
+            .premium-card{
+                padding:20px;
+                border-radius:22px;
+            }
+
+            .card-title{
+                font-size:1.65rem;
+            }
+
+            .action-row{
+                flex-direction:column;
+            }
+
+            .action-btn{
+                width:100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav py-3">
+        <div class="container d-flex justify-content-between align-items-center gap-3 flex-wrap">
+            <a href="{% url 'home' %}" class="brand">
+                <span class="brand-icon">SPA</span>
+                <span>Smart Probability & Statistics Assistant</span>
+            </a>
+
+            <div class="nav-actions">
+                <a href="{% url 'home' %}" class="nav-link-btn soft">← Back to Home</a>
+                <a href="{% url 'upload_file' %}" class="nav-link-btn primary">Upload Another File</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">
+                <span>Step 2</span>
+                <span>Column Mapping</span>
+            </div>
+            <h1>Select the correct analytical columns</h1>
+            <p>
+                Choose which column represents the call start time and which column represents call duration
+                or used amount. This step connects the uploaded dataset to the analyzer engine and prepares
+                the system for interval categorization, statistical computation, and chart generation.
+            </p>
+        </div>
+    </section>
+
+    <section class="page-section">
+        <div class="container">
+            <div class="mapping-grid">
+
+                <div class="premium-card">
+                    <div class="section-tag">Interactive Mapping</div>
+                    <h2 class="card-title">Connect your dataset fields</h2>
+                    <p class="card-desc">
+                        The analyzer works with flexible file structures. Instead of forcing one fixed report layout,
+                        the system lets you choose which fields should be interpreted as time and duration.
+                    </p>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="field-block">
+                            <label class="field-label" for="time_col">
+                                <span class="field-label-badge">T</span>
+                                <span>Call Time Column</span>
+                            </label>
+                            <select name="time_col" id="time_col" class="premium-select">
+                                {% for col in columns %}
+                                    <option value="{{ col }}">{{ col }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="helper-text">
+                                Select the column that contains the call start date or start time.
+                                For example, this may look like <strong>Boshlanish vaqti</strong>.
+                            </div>
+                        </div>
+
+                        <div class="field-block">
+                            <label class="field-label" for="duration_col">
+                                <span class="field-label-badge">D</span>
+                                <span>Call Duration Column</span>
+                            </label>
+                            <select name="duration_col" id="duration_col" class="premium-select">
+                                {% for col in columns %}
+                                    <option value="{{ col }}">{{ col }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="helper-text">
+                                Select the column that shows call duration, used amount, or the measurable
+                                usage field. For example, this may look like <strong>Ishlatilgan</strong>.
+                            </div>
+                        </div>
+
+                        <div class="tip-banner">
+                            <h4>Recommended mapping for telecom call logs</h4>
+                            <p>
+                                In many operator reports, the best pair is:
+                                <strong>Call Time → Boshlanish vaqti</strong> and
+                                <strong>Call Duration → Ishlatilgan</strong>.
+                            </p>
+                        </div>
+
+                        <div class="action-row">
+                            <button type="submit" class="action-btn primary">Continue to Statistical Analysis</button>
+                            <a href="{% url 'upload_file' %}" class="action-btn secondary">Choose Different File</a>
+                        </div>
+                    </form>
+
+                    <div class="footer-note">
+                        After this step, the system will build the joint distribution, probability table,
+                        key statistics, and visual charts automatically.
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="premium-card">
+                        <div class="section-tag">Why this step matters</div>
+                        <h2 class="card-title" style="font-size:1.6rem;">What happens after mapping</h2>
+                        <p class="card-desc" style="margin-bottom:18px;">
+                            Once the correct columns are selected, the analyzer can transform raw operator data into
+                            structured statistical outputs.
+                        </p>
+
+                        <ul class="mini-list">
+                            <li>
+                                <span class="mini-dot">1</span>
+                                <span>The time column is converted into daily intervals: 00-06, 06-12, 12-18, 18-24.</span>
+                            </li>
+                            <li>
+                                <span class="mini-dot">2</span>
+                                <span>The duration column is grouped into categories such as 0-60, 60-300, 300-600, and 600+.</span>
+                            </li>
+                            <li>
+                                <span class="mini-dot">3</span>
+                                <span>The system builds the joint frequency table <strong>n<sub>ij</sub></strong> and joint probability table <strong>p<sub>ij</sub></strong>.</span>
+                            </li>
+                            <li>
+                                <span class="mini-dot">4</span>
+                                <span>Marginal distributions, expectation, variance, standard deviation, covariance, and correlation are computed.</span>
+                            </li>
+                            <li>
+                                <span class="mini-dot">5</span>
+                                <span>Charts and an automatic textual conclusion are displayed in the result dashboard.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="premium-card">
+                        <div class="section-tag">Statistical Core</div>
+                        <h2 class="card-title" style="font-size:1.6rem;">Main formulas used next</h2>
+
+                        <div class="formula-panel mb-3">
+                            <h4>Joint probability</h4>
+                            <div class="formula-box">
+                                p<sub>ij</sub> = n<sub>ij</sub> / n
+                            </div>
+                            <p class="formula-note">
+                                Each cell of the joint frequency table is divided by the total number of valid observations.
+                            </p>
+                        </div>
+
+                        <div class="formula-panel mb-3">
+                            <h4>Expected value and variance</h4>
+                            <div class="formula-box">
+                                M[X] = Σ x<sub>i</sub>P(X = x<sub>i</sub>)<br>
+                                D[X] = Σ (x<sub>i</sub> - M[X])²P(X = x<sub>i</sub>)
+                            </div>
+                            <p class="formula-note">
+                                The same logic is used for Y after categorical coding of duration groups.
+                            </p>
+                        </div>
+
+                        <div class="formula-panel">
+                            <h4>Covariance and correlation</h4>
+                            <div class="formula-box">
+                                Cov(X,Y) = ΣΣ (x<sub>i</sub> - M[X])(y<sub>j</sub> - M[Y])p<sub>ij</sub><br>
+                                r(X,Y) = Cov(X,Y) / (σ(X)σ(Y))
+                            </div>
+                            <p class="formula-note">
+                                These indicators determine the direction and strength of the relationship
+                                between time category and duration category.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="premium-card">
+                        <div class="section-tag">Available Columns</div>
+                        <h2 class="card-title" style="font-size:1.6rem;">Detected fields from your file</h2>
+                        <p class="card-desc" style="margin-bottom:16px;">
+                            The analyzer found the following columns in the uploaded dataset.
+                            Choose the pair that best matches the meaning of time and duration.
+                        </p>
+
+                        <ul class="mini-list">
+                            {% for col in columns %}
+                                <li>
+                                    <span class="mini-dot">•</span>
+                                    <span>{{ col }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

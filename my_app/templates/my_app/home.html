@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Probability & Statistics Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root{
+            --bg-dark:#061225;
+            --bg-dark-2:#0b1f3d;
+            --bg-soft:#eef5ff;
+            --card:#ffffff;
+            --text:#0f172a;
+            --muted:#64748b;
+            --line:#dbe7f5;
+            --primary:#2563eb;
+            --primary-2:#1d4ed8;
+            --success:#16a34a;
+            --warning:#f59e0b;
+            --danger:#dc2626;
+            --purple:#7c3aed;
+            --cyan:#0891b2;
+            --shadow:0 24px 60px rgba(15, 23, 42, 0.10);
+            --radius-xl:28px;
+            --radius-lg:22px;
+            --radius-md:18px;
+        }
+
+        *{
+            box-sizing:border-box;
+        }
+
+        html{
+            scroll-behavior:smooth;
+        }
+
+        body{
+            margin:0;
+            font-family:Inter, "Segoe UI", Arial, sans-serif;
+            color:var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(37,99,235,.12), transparent 25%),
+                radial-gradient(circle at top right, rgba(14,165,233,.10), transparent 22%),
+                linear-gradient(180deg, #f5f9ff 0%, #eef5ff 55%, #f8fbff 100%);
+            overflow-x:hidden;
+        }
+
+        .top-nav{
+            position:sticky;
+            top:0;
+            z-index:1000;
+            backdrop-filter:blur(18px);
+            background:rgba(255,255,255,.72);
+            border-bottom:1px solid rgba(219,231,245,.9);
+        }
+
+        .brand{
+            display:flex;
+            align-items:center;
+            gap:14px;
+            font-weight:800;
+            color:#0f172a;
+            text-decoration:none;
+            letter-spacing:.2px;
+        }
+
+        .brand-icon{
+            width:44px;
+            height:44px;
+            border-radius:14px;
+            display:grid;
+            place-items:center;
+            color:#fff;
+            font-weight:900;
+            background:linear-gradient(135deg, var(--primary), #06b6d4);
+            box-shadow:0 12px 26px rgba(37,99,235,.24);
+            font-size:1rem;
+        }
+
+        .nav-links{
+            display:flex;
+            flex-wrap:wrap;
+            gap:12px;
+            align-items:center;
+        }
+
+        .nav-links a{
+            text-decoration:none;
+            color:#334155;
+            font-weight:600;
+            padding:10px 14px;
+            border-radius:12px;
+            transition:.25s ease;
+        }
+
+        .nav-links a:hover{
+            background:#eff6ff;
+            color:#1d4ed8;
+        }
+
+        .nav-actions{
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+            align-items:center;
+        }
+
+        .nav-action{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            text-decoration:none;
+            font-weight:700;
+            padding:10px 14px;
+            border-radius:14px;
+            transition:.25s ease;
+            font-size:.92rem;
+        }
+
+        .nav-action.soft{
+            color:#334155;
+            background:#fff;
+            border:1px solid #dbe7f5;
+        }
+
+        .nav-action.soft:hover{
+            background:#eff6ff;
+            color:#1d4ed8;
+        }
+
+        .nav-action.primary{
+            color:#fff;
+            background:linear-gradient(135deg, var(--primary), var(--primary-2));
+            box-shadow:0 16px 30px rgba(37,99,235,.24);
+        }
+
+        .hero{
+            position:relative;
+            overflow:hidden;
+            padding:68px 0 54px;
+            background:
+                radial-gradient(circle at 15% 20%, rgba(34,197,94,.16), transparent 16%),
+                radial-gradient(circle at 88% 18%, rgba(59,130,246,.22), transparent 18%),
+                linear-gradient(135deg, rgba(6,18,37,.98), rgba(11,31,61,.95));
+            color:#fff;
+            border-radius:0 0 34px 34px;
+            box-shadow:0 18px 44px rgba(15,23,42,.15);
+        }
+
+        .hero::before{
+            content:"";
+            position:absolute;
+            width:320px;
+            height:320px;
+            right:-80px;
+            top:-40px;
+            border-radius:50%;
+            background:radial-gradient(circle, rgba(59,130,246,.35), rgba(59,130,246,0));
+            filter:blur(8px);
+        }
+
+        .hero::after{
+            content:"";
+            position:absolute;
+            width:220px;
+            height:220px;
+            left:-50px;
+            bottom:-70px;
+            border-radius:50%;
+            background:radial-gradient(circle, rgba(34,197,94,.28), rgba(34,197,94,0));
+        }
+
+        .hero-badge{
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            padding:12px 16px;
+            border-radius:999px;
+            background:rgba(255,255,255,.10);
+            border:1px solid rgba(255,255,255,.14);
+            font-size:13px;
+            font-weight:700;
+            letter-spacing:.45px;
+            text-transform:uppercase;
+            margin-bottom:18px;
+        }
+
+        .hero h1{
+            font-size:clamp(2.25rem, 5vw, 4.8rem);
+            font-weight:900;
+            line-height:1.05;
+            margin-bottom:18px;
+            letter-spacing:-1.4px;
+        }
+
+        .hero p{
+            color:rgba(255,255,255,.82);
+            font-size:1.08rem;
+            line-height:1.85;
+            max-width:760px;
+            margin-bottom:28px;
+        }
+
+        .hero-actions{
+            display:flex;
+            flex-wrap:wrap;
+            gap:14px;
+            margin-bottom:32px;
+        }
+
+        .btn-main{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            min-height:56px;
+            padding:0 22px;
+            border-radius:18px;
+            text-decoration:none;
+            font-weight:800;
+            border:none;
+            transition:.25s ease;
+        }
+
+        .btn-main.primary{
+            color:#fff;
+            background:linear-gradient(135deg, #2563eb, #1d4ed8);
+            box-shadow:0 20px 34px rgba(37,99,235,.26);
+        }
+
+        .btn-main.primary:hover{
+            transform:translateY(-2px);
+            color:#fff;
+        }
+
+        .btn-main.secondary{
+            color:#fff;
+            background:rgba(255,255,255,.10);
+            border:1px solid rgba(255,255,255,.18);
+        }
+
+        .btn-main.secondary:hover{
+            background:rgba(255,255,255,.16);
+            color:#fff;
+        }
+
+        .btn-card{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            min-height:48px;
+            padding:0 18px;
+            border-radius:16px;
+            text-decoration:none;
+            font-weight:800;
+            transition:.25s ease;
+            margin-top:18px;
+        }
+
+        .btn-card.primary{
+            color:#fff;
+            background:linear-gradient(135deg, #2563eb, #1d4ed8);
+            box-shadow:0 14px 28px rgba(37,99,235,.20);
+        }
+
+        .btn-card.primary:hover{
+            transform:translateY(-2px);
+            color:#fff;
+        }
+
+        .hero-mini-stats{
+            display:grid;
+            grid-template-columns:repeat(4, 1fr);
+            gap:14px;
+            margin-top:8px;
+        }
+
+        .hero-stat{
+            background:rgba(255,255,255,.08);
+            border:1px solid rgba(255,255,255,.12);
+            backdrop-filter:blur(10px);
+            border-radius:22px;
+            padding:18px;
+        }
+
+        .hero-stat .value{
+            font-size:1.7rem;
+            font-weight:900;
+            line-height:1;
+            margin-bottom:10px;
+        }
+
+        .hero-stat .label{
+            color:rgba(255,255,255,.78);
+            font-size:.92rem;
+            line-height:1.5;
+        }
+
+        .hero-panel{
+            background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+            border:1px solid rgba(255,255,255,.14);
+            border-radius:28px;
+            padding:24px;
+            box-shadow:0 24px 48px rgba(2,8,23,.24);
+            backdrop-filter:blur(10px);
+        }
+
+        .hero-panel-title{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            margin-bottom:18px;
+        }
+
+        .hero-panel-title h3{
+            margin:0;
+            font-size:1.15rem;
+            font-weight:800;
+        }
+
+        .status-pill{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:8px 12px;
+            border-radius:999px;
+            background:rgba(34,197,94,.16);
+            color:#dcfce7;
+            border:1px solid rgba(134,239,172,.2);
+            font-size:13px;
+            font-weight:700;
+        }
+
+        .demo-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:14px;
+        }
+
+        .demo-card{
+            display:block;
+            text-decoration:none;
+            background:rgba(255,255,255,.09);
+            border:1px solid rgba(255,255,255,.1);
+            border-radius:20px;
+            padding:16px;
+            transition:.25s ease;
+            color:#fff;
+        }
+
+        .demo-card:hover{
+            transform:translateY(-3px);
+            background:rgba(255,255,255,.14);
+            color:#fff;
+        }
+
+        .demo-card h4{
+            margin:0 0 8px;
+            font-size:1rem;
+            font-weight:800;
+        }
+
+        .demo-card p{
+            margin:0 0 10px;
+            font-size:.92rem;
+            line-height:1.65;
+            color:rgba(255,255,255,.78);
+        }
+
+        .demo-card .demo-open{
+            font-size:.88rem;
+            font-weight:800;
+            color:#fff;
+            opacity:.95;
+        }
+
+        .section{
+            padding:34px 0;
+        }
+
+        .section-title-wrap{
+            margin-bottom:24px;
+        }
+
+        .section-tag{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            background:#eaf2ff;
+            color:#1d4ed8;
+            border:1px solid #dbeafe;
+            border-radius:999px;
+            padding:10px 14px;
+            font-size:13px;
+            font-weight:800;
+            text-transform:uppercase;
+            letter-spacing:.45px;
+            margin-bottom:12px;
+        }
+
+        .section h2{
+            font-size:clamp(1.75rem, 3vw, 2.85rem);
+            font-weight:900;
+            margin-bottom:12px;
+            color:#0f172a;
+            letter-spacing:-.8px;
+        }
+
+        .section-desc{
+            color:#475569;
+            font-size:1rem;
+            line-height:1.8;
+            max-width:900px;
+        }
+
+        .glass-card{
+            background:rgba(255,255,255,.85);
+            border:1px solid rgba(255,255,255,.9);
+            box-shadow:var(--shadow);
+            border-radius:var(--radius-xl);
+            padding:24px;
+            height:100%;
+            position:relative;
+            overflow:hidden;
+        }
+
+        .glass-card::before{
+            content:"";
+            position:absolute;
+            inset:0 0 auto 0;
+            height:4px;
+            background:linear-gradient(90deg, #2563eb, #06b6d4, #22c55e);
+        }
+
+        .module-grid{
+            display:grid;
+            grid-template-columns:repeat(2, 1fr);
+            gap:22px;
+        }
+
+        .module-card{
+            background:linear-gradient(180deg, #ffffff, #fbfdff);
+            border:1px solid #e2e8f0;
+            border-radius:24px;
+            padding:24px;
+            box-shadow:0 12px 28px rgba(15,23,42,.06);
+            height:100%;
+            position:relative;
+        }
+
+        .module-head{
+            display:flex;
+            justify-content:space-between;
+            gap:12px;
+            margin-bottom:16px;
+            align-items:flex-start;
+        }
+
+        .module-icon{
+            width:56px;
+            height:56px;
+            border-radius:18px;
+            display:grid;
+            place-items:center;
+            color:#fff;
+            font-weight:900;
+            font-size:1.2rem;
+            box-shadow:0 16px 28px rgba(15,23,42,.10);
+        }
+
+        .icon-blue{ background:linear-gradient(135deg, #2563eb, #1d4ed8); }
+        .icon-green{ background:linear-gradient(135deg, #16a34a, #22c55e); }
+        .icon-purple{ background:linear-gradient(135deg, #7c3aed, #8b5cf6); }
+        .icon-cyan{ background:linear-gradient(135deg, #0891b2, #06b6d4); }
+
+        .status-badge{
+            display:inline-flex;
+            align-items:center;
+            padding:8px 12px;
+            border-radius:999px;
+            font-size:12px;
+            font-weight:800;
+            letter-spacing:.4px;
+            text-transform:uppercase;
+        }
+
+        .status-live{
+            background:#dcfce7;
+            color:#166534;
+            border:1px solid #bbf7d0;
+        }
+
+        .module-card h3{
+            margin:0 0 10px;
+            font-size:1.35rem;
+            font-weight:900;
+            color:#0f172a;
+        }
+
+        .module-card p{
+            color:#475569;
+            line-height:1.75;
+            font-size:.98rem;
+            margin-bottom:18px;
+        }
+
+        .feature-list{
+            list-style:none;
+            padding:0;
+            margin:0;
+            display:grid;
+            gap:12px;
+        }
+
+        .feature-list li{
+            display:flex;
+            gap:12px;
+            align-items:flex-start;
+            color:#1e293b;
+            line-height:1.6;
+            background:#f8fbff;
+            border:1px solid #e7eff9;
+            border-radius:16px;
+            padding:12px 14px;
+        }
+
+        .feature-dot{
+            width:26px;
+            height:26px;
+            border-radius:10px;
+            display:grid;
+            place-items:center;
+            flex-shrink:0;
+            font-size:.78rem;
+            font-weight:900;
+            color:#fff;
+            background:linear-gradient(135deg, #2563eb, #06b6d4);
+            margin-top:1px;
+        }
+
+        .mvp-layout{
+            display:grid;
+            grid-template-columns:1.08fr .92fr;
+            gap:22px;
+        }
+
+        .steps{
+            display:grid;
+            gap:16px;
+        }
+
+        .step-item{
+            display:flex;
+            gap:16px;
+            align-items:flex-start;
+            padding:18px;
+            border-radius:22px;
+            background:#fff;
+            border:1px solid #e2e8f0;
+            box-shadow:0 10px 20px rgba(15,23,42,.05);
+        }
+
+        .step-number{
+            width:46px;
+            height:46px;
+            border-radius:16px;
+            display:grid;
+            place-items:center;
+            flex-shrink:0;
+            color:#fff;
+            font-weight:900;
+            background:linear-gradient(135deg, #2563eb, #1d4ed8);
+        }
+
+        .step-item h4{
+            margin:0 0 6px;
+            font-size:1.06rem;
+            font-weight:800;
+        }
+
+        .step-item p{
+            margin:0;
+            color:#475569;
+            line-height:1.65;
+        }
+
+        .preview-board{
+            background:linear-gradient(180deg, #0b1220, #111c30);
+            border-radius:28px;
+            padding:18px;
+            color:#fff;
+            box-shadow:0 24px 50px rgba(15,23,42,.18);
+            border:1px solid rgba(255,255,255,.08);
+        }
+
+        .preview-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:14px;
+        }
+
+        .preview-dots{
+            display:flex;
+            gap:8px;
+        }
+
+        .preview-dots span{
+            width:11px;
+            height:11px;
+            border-radius:50%;
+            display:block;
+        }
+
+        .preview-dots span:nth-child(1){ background:#ef4444; }
+        .preview-dots span:nth-child(2){ background:#f59e0b; }
+        .preview-dots span:nth-child(3){ background:#22c55e; }
+
+        .preview-title{
+            font-size:.95rem;
+            font-weight:700;
+            color:#cbd5e1;
+        }
+
+        .mock-card{
+            background:#f8fafc;
+            color:#0f172a;
+            border-radius:20px;
+            padding:18px;
+            margin-bottom:14px;
+        }
+
+        .mock-card h5{
+            margin:0 0 8px;
+            font-weight:800;
+            font-size:1rem;
+        }
+
+        .mini-table{
+            width:100%;
+            border-collapse:collapse;
+            font-size:.88rem;
+        }
+
+        .mini-table th,
+        .mini-table td{
+            border:1px solid #dbe7f5;
+            padding:8px 10px;
+            text-align:center;
+        }
+
+        .mini-table th{
+            background:#eff6ff;
+            font-weight:800;
+        }
+
+        .chart-bars{
+            display:flex;
+            align-items:flex-end;
+            gap:14px;
+            height:180px;
+            padding:12px 8px 0;
+        }
+
+        .bar-group{
+            display:flex;
+            align-items:flex-end;
+            gap:4px;
+            flex:1;
+            justify-content:center;
+        }
+
+        .bar{
+            width:18px;
+            border-radius:8px 8px 0 0;
+        }
+
+        .bar.b1{ background:#2563eb; height:64%; }
+        .bar.b2{ background:#06b6d4; height:45%; }
+        .bar.b3{ background:#22c55e; height:28%; }
+        .bar.b4{ background:#ef4444; height:82%; }
+
+        .bar-labels{
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            margin-top:8px;
+            gap:10px;
+            color:#475569;
+            font-size:.85rem;
+            text-align:center;
+            font-weight:700;
+        }
+
+        .feature-highlight{
+            display:grid;
+            grid-template-columns:repeat(3, 1fr);
+            gap:18px;
+        }
+
+        .highlight-card{
+            background:#fff;
+            border:1px solid #e2e8f0;
+            border-radius:24px;
+            padding:22px;
+            box-shadow:0 12px 28px rgba(15,23,42,.06);
+        }
+
+        .highlight-card h4{
+            margin:14px 0 8px;
+            font-size:1.06rem;
+            font-weight:900;
+        }
+
+        .highlight-card p{
+            margin:0;
+            color:#475569;
+            line-height:1.7;
+        }
+
+        .highlight-icon{
+            width:54px;
+            height:54px;
+            border-radius:18px;
+            display:grid;
+            place-items:center;
+            color:#fff;
+            font-weight:900;
+            background:linear-gradient(135deg, #2563eb, #7c3aed);
+        }
+
+        .stats-board{
+            display:grid;
+            grid-template-columns:repeat(4, 1fr);
+            gap:18px;
+        }
+
+        .metric-box{
+            background:linear-gradient(180deg, #fff, #fbfdff);
+            border:1px solid #e2e8f0;
+            border-radius:24px;
+            padding:22px;
+            box-shadow:0 12px 28px rgba(15,23,42,.05);
+        }
+
+        .metric-box .name{
+            font-size:.9rem;
+            color:#64748b;
+            font-weight:800;
+            margin-bottom:10px;
+        }
+
+        .metric-box .formula{
+            font-size:1.6rem;
+            font-weight:900;
+            color:#0f172a;
+            line-height:1.2;
+        }
+
+        .metric-box .note{
+            margin-top:10px;
+            color:#475569;
+            line-height:1.6;
+            font-size:.92rem;
+        }
+
+        .workflow-grid{
+            display:grid;
+            grid-template-columns:repeat(4, 1fr);
+            gap:18px;
+        }
+
+        .workflow-card{
+            background:linear-gradient(180deg, #ffffff, #fbfdff);
+            border:1px solid #e2e8f0;
+            border-radius:24px;
+            padding:22px;
+            box-shadow:0 12px 26px rgba(15,23,42,.05);
+            position:relative;
+        }
+
+        .workflow-card .num{
+            width:42px;
+            height:42px;
+            display:grid;
+            place-items:center;
+            border-radius:14px;
+            color:#fff;
+            font-weight:900;
+            margin-bottom:14px;
+            background:linear-gradient(135deg, #2563eb, #06b6d4);
+        }
+
+        .workflow-card h4{
+            margin:0 0 8px;
+            font-size:1.08rem;
+            font-weight:900;
+        }
+
+        .workflow-card p{
+            margin:0;
+            color:#475569;
+            line-height:1.7;
+        }
+
+        .roadmap-grid{
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:22px;
+        }
+
+        .roadmap-card{
+            background:#fff;
+            border:1px solid #e2e8f0;
+            border-radius:24px;
+            padding:22px;
+            box-shadow:0 12px 26px rgba(15,23,42,.05);
+        }
+
+        .roadmap-card h4{
+            margin:0 0 14px;
+            font-weight:900;
+            font-size:1.2rem;
+        }
+
+        .timeline{
+            list-style:none;
+            padding:0;
+            margin:0;
+            display:grid;
+            gap:12px;
+        }
+
+        .timeline li{
+            padding:14px 14px 14px 16px;
+            border-radius:18px;
+            background:#f8fbff;
+            border:1px solid #e2e8f0;
+            color:#1e293b;
+            line-height:1.65;
+        }
+
+        .timeline strong{
+            color:#0f172a;
+        }
+
+        .cta-banner{
+            background:
+                radial-gradient(circle at left top, rgba(34,197,94,.16), transparent 18%),
+                radial-gradient(circle at right top, rgba(59,130,246,.18), transparent 22%),
+                linear-gradient(135deg, #0b1f3d, #061225);
+            color:#fff;
+            border-radius:32px;
+            padding:34px 28px;
+            box-shadow:0 24px 54px rgba(15,23,42,.18);
+        }
+
+        .cta-banner h2{
+            color:#fff;
+            margin-bottom:12px;
+        }
+
+        .cta-banner p{
+            color:rgba(255,255,255,.82);
+            line-height:1.8;
+            margin-bottom:20px;
+            max-width:780px;
+        }
+
+        .footer{
+            padding:30px 0 40px;
+            color:#64748b;
+            text-align:center;
+            font-size:.95rem;
+        }
+
+        @media (max-width: 1199px){
+            .hero-mini-stats,
+            .feature-highlight,
+            .stats-board,
+            .workflow-grid{
+                grid-template-columns:repeat(2,1fr);
+            }
+
+            .mvp-layout,
+            .roadmap-grid{
+                grid-template-columns:1fr;
+            }
+        }
+
+        @media (max-width: 991px){
+            .module-grid{
+                grid-template-columns:1fr;
+            }
+
+            .nav-links{
+                display:none;
+            }
+        }
+
+        @media (max-width: 767px){
+            .hero{
+                padding:52px 0 42px;
+            }
+
+            .hero-mini-stats,
+            .feature-highlight,
+            .stats-board,
+            .workflow-grid{
+                grid-template-columns:1fr;
+            }
+
+            .demo-grid{
+                grid-template-columns:1fr;
+            }
+
+            .hero-panel{
+                margin-top:10px;
+            }
+
+            .nav-actions{
+                width:100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav py-3">
+        <div class="container d-flex justify-content-between align-items-center gap-3 flex-wrap">
+            <a href="{% url 'home' %}" class="brand">
+                <span class="brand-icon">SPA</span>
+                <span>Smart Probability & Statistics Assistant</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#modules">Modules</a>
+                <a href="#mvp">MVP</a>
+                <a href="#features">Features</a>
+                <a href="#workflow">Workflow</a>
+                <a href="#roadmap">Roadmap</a>
+            </div>
+
+            <div class="nav-actions">
+                <a href="{% url 'distribution_calculator' %}" class="nav-action soft">Calculator</a>
+                <a href="{% url 'problem_solver' %}" class="nav-action soft">Solver</a>
+                <a href="{% url 'trainer_home' %}" class="nav-action soft">Trainer</a>
+                <a href="{% url 'upload_file' %}" class="nav-action primary">Start Analysis</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-7">
+                    <div class="hero-badge">
+                        <span>Final Project Concept</span>
+                        <span>Probability + Statistics + Django</span>
+                    </div>
+
+                    <h1>Smart Probability &amp; Statistics Assistant</h1>
+
+                    <p>
+                        A modern educational and analytical web platform built with Django, Pandas, NumPy,
+                        Matplotlib, and Bootstrap. The system focuses on statistical analysis of real-world call logs,
+                        distribution calculations, automatic problem solving, and topic-based training.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="{% url 'upload_file' %}" class="btn-main primary">Launch MVP Analyzer</a>
+                        <a href="{% url 'distribution_calculator' %}" class="btn-main secondary">Open Calculator</a>
+                        <a href="{% url 'problem_solver' %}" class="btn-main secondary">Open Solver</a>
+                        <a href="{% url 'trainer_home' %}" class="btn-main secondary">Open Trainer</a>
+                    </div>
+
+                    <div class="hero-mini-stats">
+                        <div class="hero-stat">
+                            <div class="value">4</div>
+                            <div class="label">Core modules planned in the full system.</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="value">4</div>
+                            <div class="label">Modules now visible and connected through backend routes.</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="value">7+</div>
+                            <div class="label">Major statistical outputs and visual analytics blocks.</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="value">MVP</div>
+                            <div class="label">Working analytical core with upload, mapping, tables, charts, and conclusion.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="hero-panel">
+                        <div class="hero-panel-title">
+                            <h3>System Snapshot</h3>
+                            <span class="status-pill">Modules connected</span>
+                        </div>
+
+                        <div class="demo-grid">
+                            <a href="{% url 'upload_file' %}" class="demo-card">
+                                <h4>Call Log Analyzer</h4>
+                                <p>Upload Excel or CSV, map columns, generate joint distributions, charts, and conclusions.</p>
+                                <span class="demo-open">Open module →</span>
+                            </a>
+
+                            <a href="{% url 'distribution_calculator' %}" class="demo-card">
+                                <h4>Distribution Calculator</h4>
+                                <p>Bernoulli, Binomial, Poisson, Geometric, Hypergeometric, Uniform, Exponential, Normal.</p>
+                                <span class="demo-open">Open module →</span>
+                            </a>
+
+                            <a href="{% url 'problem_solver' %}" class="demo-card">
+                                <h4>Problem Solver</h4>
+                                <p>Understands text-based probability and statistics problems, then solves them step by step.</p>
+                                <span class="demo-open">Open module →</span>
+                            </a>
+
+                            <a href="{% url 'trainer_home' %}" class="demo-card">
+                                <h4>Topic Trainer</h4>
+                                <p>Short theory, example tasks, quizzes, and structured revision for major topics.</p>
+                                <span class="demo-open">Open module →</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="modules" class="section">
+        <div class="container">
+            <div class="section-title-wrap">
+                <div class="section-tag">System Modules</div>
+                <h2>All planned modules in one smart platform</h2>
+                <p class="section-desc">
+                    The final system is designed as a unified assistant for analysis, learning, and problem solving.
+                    The home page now presents the full vision of the project and connects each major module to a working route.
+                </p>
+            </div>
+
+            <div class="module-grid">
+                <div class="module-card">
+                    <div class="module-head">
+                        <div class="module-icon icon-blue">01</div>
+                        <span class="status-badge status-live">Ready</span>
+                    </div>
+                    <h3>Call Log Statistical Analyzer</h3>
+                    <p>
+                        The main MVP module for analyzing mobile operator call logs such as Ucell, Beeline, Uzmobile,
+                        and Mobiuz reports. This module transforms raw files into structured statistical insight.
+                    </p>
+                    <ul class="feature-list">
+                        <li><span class="feature-dot">✓</span><span>Upload Excel or CSV call logs from telecom operators.</span></li>
+                        <li><span class="feature-dot">✓</span><span>Map call time and call duration columns interactively.</span></li>
+                        <li><span class="feature-dot">✓</span><span>Split time into four daily intervals: 00-06, 06-12, 12-18, 18-24.</span></li>
+                        <li><span class="feature-dot">✓</span><span>Generate joint frequency and joint probability tables.</span></li>
+                        <li><span class="feature-dot">✓</span><span>Compute marginal distributions, mean, variance, standard deviation, covariance, and correlation.</span></li>
+                        <li><span class="feature-dot">✓</span><span>Build visual charts such as stacked bars and heatmaps.</span></li>
+                        <li><span class="feature-dot">✓</span><span>Produce an automatic textual conclusion from the data.</span></li>
+                    </ul>
+                    <a href="{% url 'upload_file' %}" class="btn-card primary">Open Analyzer</a>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-head">
+                        <div class="module-icon icon-green">02</div>
+                        <span class="status-badge status-live">Ready</span>
+                    </div>
+                    <h3>Distribution Calculator</h3>
+                    <p>
+                        A flexible module for working with discrete and continuous distributions.
+                        It helps users compute values, view formulas, and understand the meaning of each model.
+                    </p>
+                    <ul class="feature-list">
+                        <li><span class="feature-dot">ƒ</span><span>Bernoulli distribution calculator with explanation and formula output.</span></li>
+                        <li><span class="feature-dot">ƒ</span><span>Binomial distribution with parameter input and formula-based solution.</span></li>
+                        <li><span class="feature-dot">ƒ</span><span>Poisson, Geometric, and Hypergeometric distribution support.</span></li>
+                        <li><span class="feature-dot">ƒ</span><span>Uniform, Exponential, and Normal distribution calculators.</span></li>
+                        <li><span class="feature-dot">ƒ</span><span>Step-by-step interpretation of parameters and results.</span></li>
+                        <li><span class="feature-dot">ƒ</span><span>Fast educational calculator page connected to backend logic.</span></li>
+                    </ul>
+                    <a href="{% url 'distribution_calculator' %}" class="btn-card primary">Open Calculator</a>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-head">
+                        <div class="module-icon icon-purple">03</div>
+                        <span class="status-badge status-live">Ready</span>
+                    </div>
+                    <h3>Problem Solver</h3>
+                    <p>
+                        A smart text-based solver that lets users type a probability or statistics problem.
+                        The system identifies the problem type and returns a structured solution.
+                    </p>
+                    <ul class="feature-list">
+                        <li><span class="feature-dot">AI</span><span>Accepts natural language probability/statistics questions.</span></li>
+                        <li><span class="feature-dot">AI</span><span>Detects supported topic patterns automatically.</span></li>
+                        <li><span class="feature-dot">AI</span><span>Extracts numeric parameters from the user’s text.</span></li>
+                        <li><span class="feature-dot">AI</span><span>Shows formulas, intermediate steps, and the final answer.</span></li>
+                        <li><span class="feature-dot">AI</span><span>Current MVP support is strongest for Bernoulli, Binomial, and Poisson-style tasks.</span></li>
+                    </ul>
+                    <a href="{% url 'problem_solver' %}" class="btn-card primary">Open Solver</a>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-head">
+                        <div class="module-icon icon-cyan">04</div>
+                        <span class="status-badge status-live">Ready</span>
+                    </div>
+                    <h3>Topic-Based Trainer</h3>
+                    <p>
+                        A learning and revision module for students who want quick theory, worked examples,
+                        and short quizzes in one place.
+                    </p>
+                    <ul class="feature-list">
+                        <li><span class="feature-dot">T</span><span>Short theory blocks for major topics in probability and statistics.</span></li>
+                        <li><span class="feature-dot">T</span><span>Worked examples with interpretation and formulas.</span></li>
+                        <li><span class="feature-dot">T</span><span>Mini quizzes for self-check and revision.</span></li>
+                        <li><span class="feature-dot">T</span><span>Topic landing page and dedicated topic screens connected to backend data.</span></li>
+                        <li><span class="feature-dot">T</span><span>Designed for both classroom support and independent learning.</span></li>
+                    </ul>
+                    <a href="{% url 'trainer_home' %}" class="btn-card primary">Open Trainer</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="mvp" class="section">
+        <div class="container">
+            <div class="glass-card">
+                <div class="section-title-wrap">
+                    <div class="section-tag">Main MVP Focus</div>
+                    <h2>Call Log Statistical Analyzer workflow</h2>
+                    <p class="section-desc">
+                        The MVP is centered around one complete analytical flow: file upload, variable mapping,
+                        transformation, statistical computation, visualization, and automatic conclusion.
+                        This makes the project highly demonstrable even while other modules continue expanding.
+                    </p>
+                </div>
+
+                <div class="mvp-layout">
+                    <div class="steps">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <div>
+                                <h4>Upload raw call log file</h4>
+                                <p>
+                                    The user uploads a structured Excel or CSV file exported from mobile operators.
+                                    The platform stores the file temporarily and prepares it for processing.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <div>
+                                <h4>Map the key analytical columns</h4>
+                                <p>
+                                    The user selects which column contains the call time and which column contains
+                                    the call duration or used amount. This makes the module flexible for different report formats.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <div>
+                                <h4>Transform data into categories</h4>
+                                <p>
+                                    Time is converted into four intervals of the day, while duration is grouped into
+                                    ranges such as 0-60, 60-300, 300-600, and 600+.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-number">4</div>
+                            <div>
+                                <h4>Build statistical tables and graphs</h4>
+                                <p>
+                                    The system generates joint frequency and probability distributions, marginal distributions,
+                                    charts, and a summary interpretation.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-number">5</div>
+                            <div>
+                                <h4>Compute analytical indicators</h4>
+                                <p>
+                                    Expected value, variance, standard deviation, covariance, and correlation are computed
+                                    using coded categories of X and Y.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-number">6</div>
+                            <div>
+                                <h4>Show conclusion and final report</h4>
+                                <p>
+                                    The final dashboard presents visual analytics and automatic conclusions, while future
+                                    versions can support downloadable report export.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="preview-board">
+                        <div class="preview-header">
+                            <div class="preview-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <div class="preview-title">SPA — Analyzer Preview</div>
+                        </div>
+
+                        <div class="mock-card">
+                            <h5>Joint Frequency Table</h5>
+                            <table class="mini-table">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>0-60</th>
+                                        <th>60-300</th>
+                                        <th>300-600</th>
+                                        <th>600+</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>00-06</td>
+                                        <td>136</td>
+                                        <td>31</td>
+                                        <td>10</td>
+                                        <td>49</td>
+                                    </tr>
+                                    <tr>
+                                        <td>06-12</td>
+                                        <td>129</td>
+                                        <td>21</td>
+                                        <td>7</td>
+                                        <td>51</td>
+                                    </tr>
+                                    <tr>
+                                        <td>12-18</td>
+                                        <td>117</td>
+                                        <td>38</td>
+                                        <td>13</td>
+                                        <td>139</td>
+                                    </tr>
+                                    <tr>
+                                        <td>18-24</td>
+                                        <td>194</td>
+                                        <td>47</td>
+                                        <td>19</td>
+                                        <td>69</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mock-card">
+                            <h5>Chart Preview</h5>
+                            <div class="chart-bars">
+                                <div class="bar-group">
+                                    <div class="bar b1"></div>
+                                    <div class="bar b2"></div>
+                                    <div class="bar b3"></div>
+                                    <div class="bar b4"></div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar b1" style="height:61%"></div>
+                                    <div class="bar b2" style="height:34%"></div>
+                                    <div class="bar b3" style="height:20%"></div>
+                                    <div class="bar b4" style="height:58%"></div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar b1" style="height:56%"></div>
+                                    <div class="bar b2" style="height:40%"></div>
+                                    <div class="bar b3" style="height:24%"></div>
+                                    <div class="bar b4" style="height:86%"></div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar b1" style="height:92%"></div>
+                                    <div class="bar b2" style="height:44%"></div>
+                                    <div class="bar b3" style="height:26%"></div>
+                                    <div class="bar b4" style="height:68%"></div>
+                                </div>
+                            </div>
+                            <div class="bar-labels">
+                                <span>00-06</span>
+                                <span>06-12</span>
+                                <span>12-18</span>
+                                <span>18-24</span>
+                            </div>
+                        </div>
+
+                        <div class="mock-card mb-0">
+                            <h5>Generated Insight</h5>
+                            <p style="margin:0;color:#475569;line-height:1.75;">
+                                Most records are concentrated in the 18-24 interval. The dominant duration category
+                                is 0-60, while the relationship between call time and duration is weak with a positive tendency.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="section">
+        <div class="container">
+            <div class="section-title-wrap">
+                <div class="section-tag">Feature Highlights</div>
+                <h2>What makes this platform useful and presentable</h2>
+                <p class="section-desc">
+                    The system is not just about raw calculations. It is designed as a clear, educational,
+                    and demonstrable interface where analytical results can be explored visually.
+                </p>
+            </div>
+
+            <div class="feature-highlight">
+                <div class="highlight-card">
+                    <div class="highlight-icon">UI</div>
+                    <h4>Modern educational dashboard</h4>
+                    <p>
+                        A clean and premium interface makes the project suitable for demos, coursework,
+                        competitions, and presentations without looking like a raw prototype.
+                    </p>
+                </div>
+
+                <div class="highlight-card">
+                    <div class="highlight-icon">FX</div>
+                    <h4>Statistical outputs in one place</h4>
+                    <p>
+                        Tables, charts, formulas, and conclusions are combined in a single workflow,
+                        helping users understand both the result and the reasoning behind it.
+                    </p>
+                </div>
+
+                <div class="highlight-card">
+                    <div class="highlight-icon">ED</div>
+                    <h4>Expandable educational architecture</h4>
+                    <p>
+                        The project can easily grow into a broader educational assistant with calculators,
+                        theory blocks, quizzes, and natural-language solving tools.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="glass-card">
+                <div class="section-title-wrap">
+                    <div class="section-tag">Core Statistics</div>
+                    <h2>Main indicators used in the analyzer</h2>
+                    <p class="section-desc">
+                        The current MVP is centered on joint distributions and classical statistical measures
+                        for coded random variables derived from call time intervals and duration categories.
+                    </p>
+                </div>
+
+                <div class="stats-board">
+                    <div class="metric-box">
+                        <div class="name">Joint Frequency Table</div>
+                        <div class="formula">n<sub>ij</sub></div>
+                        <div class="note">Counts how many observations fall into each pair of time and duration categories.</div>
+                    </div>
+
+                    <div class="metric-box">
+                        <div class="name">Joint Probability</div>
+                        <div class="formula">p<sub>ij</sub> = n<sub>ij</sub> / n</div>
+                        <div class="note">Transforms raw counts into probabilities based on the total number of valid observations.</div>
+                    </div>
+
+                    <div class="metric-box">
+                        <div class="name">Expected Value</div>
+                        <div class="formula">M[X], M[Y]</div>
+                        <div class="note">Represents the average coded position of the random variables X and Y.</div>
+                    </div>
+
+                    <div class="metric-box">
+                        <div class="name">Variance</div>
+                        <div class="formula">D[X], D[Y]</div>
+                        <div class="note">Measures how widely the random variables are distributed around their expected values.</div>
+                    </div>
+
+                    <div class="metric-box">
+                        <div class="name">Standard Deviation</div>
+                        <div class="formula">σ(X), σ(Y)</div>
+                        <div class="note">Shows the spread of categories in the same coded scale as the variables.</div>
+                    </div>
+
+                    <div class="metric-box">
+                        <div class="name">Covariance</div>
+                        <div class="formula">Cov(X,Y)</div>
+                        <div class="note">Describes how the coded time and duration categories vary together.</div>
+                    </div>
+
+                    <div class="metric-box">
+                        <div class="name">Correlation</div>
+                        <div class="formula">r(X,Y)</div>
+                        <div class="note">Shows the direction and strength of the relationship between the variables.</div>
+                    </div>
+
+                    <div class="metric-box">
+                        <div class="name">Marginal Distributions</div>
+                        <div class="formula">P(X), P(Y)</div>
+                        <div class="note">Summarize probabilities for each variable separately from the joint distribution.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="workflow" class="section">
+        <div class="container">
+            <div class="section-title-wrap">
+                <div class="section-tag">User Workflow</div>
+                <h2>Simple journey from file upload to final insight</h2>
+                <p class="section-desc">
+                    The home page now reflects how users move through the platform:
+                    analysis, calculation, solving, and topic-based study.
+                </p>
+            </div>
+
+            <div class="workflow-grid">
+                <div class="workflow-card">
+                    <div class="num">1</div>
+                    <h4>Choose module</h4>
+                    <p>
+                        The user starts from the home page and selects the desired module,
+                        beginning with the analyzer or moving into calculator, solver, or trainer.
+                    </p>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="num">2</div>
+                    <h4>Upload or input data</h4>
+                    <p>
+                        Structured files are uploaded for the analyzer, while other modules
+                        accept formulas, parameters, or natural language tasks.
+                    </p>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="num">3</div>
+                    <h4>Process and compute</h4>
+                    <p>
+                        The platform applies categorization, calculations, formulas, and logic
+                        to transform the input into meaningful statistical results.
+                    </p>
+                </div>
+
+                <div class="workflow-card">
+                    <div class="num">4</div>
+                    <h4>Visualize and learn</h4>
+                    <p>
+                        The result is displayed through tables, indicators, charts, and textual
+                        explanations, making the system useful for both analysis and learning.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="roadmap" class="section">
+        <div class="container">
+            <div class="section-title-wrap">
+                <div class="section-tag">Development Plan</div>
+                <h2>Current status and next development roadmap</h2>
+                <p class="section-desc">
+                    The project is intentionally being built in stages so the MVP can work first,
+                    while the rest of the platform is layered on top of a stable structure.
+                </p>
+            </div>
+
+            <div class="roadmap-grid">
+                <div class="roadmap-card">
+                    <h4>Current Version</h4>
+                    <ul class="timeline">
+                        <li><strong>Home dashboard:</strong> premium landing page with all modules and real route connections.</li>
+                        <li><strong>File upload:</strong> users can upload supported files for statistical analysis.</li>
+                        <li><strong>Column mapping:</strong> core time and duration fields can be selected interactively.</li>
+                        <li><strong>Analyzer results:</strong> frequency table, probability table, marginal distributions, indicators, charts, and automatic conclusion.</li>
+                        <li><strong>Calculator, Solver, Trainer:</strong> each module is now reachable from the home page.</li>
+                    </ul>
+                </div>
+
+                <div class="roadmap-card">
+                    <h4>Next Steps</h4>
+                    <ul class="timeline">
+                        <li><strong>Distribution Calculator enhancement:</strong> expand formulas, outputs, and graph support for all target distributions.</li>
+                        <li><strong>Problem Solver enhancement:</strong> improve text parsing and support more probability/statistics task types.</li>
+                        <li><strong>Trainer enhancement:</strong> add more theory pages, richer examples, and interactive quizzes.</li>
+                        <li><strong>Report export:</strong> support print-friendly output and downloadable reports.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section pt-0">
+        <div class="container">
+            <div class="cta-banner">
+                <h2>Start with the platform now</h2>
+                <p>
+                    You can begin with real data analysis right now and also open the calculator,
+                    problem solver, and topic-based trainer directly from this home page.
+                </p>
+                <div class="hero-actions mb-0">
+                    <a href="{% url 'upload_file' %}" class="btn-main primary">Open Call Log Analyzer</a>
+                    <a href="{% url 'distribution_calculator' %}" class="btn-main secondary">Open Distribution Calculator</a>
+                    <a href="{% url 'problem_solver' %}" class="btn-main secondary">Open Problem Solver</a>
+                    <a href="{% url 'trainer_home' %}" class="btn-main secondary">Open Topic Trainer</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            Smart Probability &amp; Statistics Assistant — Django based educational and analytical platform
+        </div>
+    </footer>
+
+</body>
+</html>
